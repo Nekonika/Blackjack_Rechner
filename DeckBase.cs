@@ -5,13 +5,9 @@ using System.Linq;
 
 namespace Blackjack_Rechner
 {
-    public class Deck
+    internal class DeckBase
     {
-        private static readonly Random _Random = new Random();
-
-        private Queue<string> _Cards;
-        public ReadOnlyCollection<string> Cards => new ReadOnlyCollection<string>(_Cards.ToArray());
-        public int RemainingCards => _Cards.Count;
+        protected readonly Random _Random = new Random();
 
         public static readonly ReadOnlyDictionary<string, string> CardColors = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>() {
             { "HE", "Herz" },
@@ -36,33 +32,7 @@ namespace Blackjack_Rechner
             new CardValue( "A", "Ass", new [] { 1, 11 } ),
         });
 
-        public class CardValue
-        {
-            public readonly string ID;
-            public readonly string Name;
-            public readonly int[] Values;
-
-            public CardValue(string id, string name, int[] values)
-            {
-                this.ID = id;
-                this.Name = name;
-                this.Values = values;
-            }
-        }
-
-        public Deck(int deckCount = 6) => this._Cards = new Queue<string>(GetNewDeck(deckCount));
-
-        public static Deck Empty = new Deck(0);
-
-        public virtual void SetCards(List<string> cards, bool validate = true)
-        {
-            if (!AreCardsValid(cards)) throw new ArgumentException("Invalid Deck!", nameof(cards));
-
-            this._Cards = new Queue<string>(cards);
-        }
-
-        public virtual void New() => _Cards = new Queue<string>(GetNewDeck());
-        public static List<string> GetNewDeck(int deckCount = 6)
+        public virtual List<string> GetNewDeck(int deckCount = 6)
         {
             List<string> NewDeck = new List<string>();
 
@@ -77,8 +47,7 @@ namespace Blackjack_Rechner
             return NewDeck;
         }
 
-        public void Shuffle() => _Cards = new Queue<string>(Shuffle(_Cards.ToList()));
-        public static List<string> Shuffle(List<string> deck)
+        public virtual List<string> Shuffle(List<string> deck)
         {
             List<string> ShuffledDeck = new List<string>();
 
@@ -130,8 +99,18 @@ namespace Blackjack_Rechner
             return true;
         }
 
-        public virtual string Pull() => _Cards.Dequeue();
-        public virtual string PeekTop() => _Cards.First();
-        public virtual string PeekBottom() => _Cards.Last();
+        public class CardValue
+        {
+            public readonly string ID;
+            public readonly string Name;
+            public readonly int[] Values;
+
+            public CardValue(string id, string name, int[] values)
+            {
+                ID = id;
+                Name = name;
+                Values = values;
+            }
+        }
     }
 }

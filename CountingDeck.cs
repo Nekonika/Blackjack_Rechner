@@ -4,20 +4,29 @@ using System.Linq;
 
 namespace Blackjack_Rechner
 {
-    public class CountingDeck : Deck
+    internal class CountingDeck : StandardDeck
     {
-        private List<string> _PulledCards = new List<string>();
+        private readonly List<string> _PulledCards = new List<string>();
         public ReadOnlyCollection<string> PulledCards => new ReadOnlyCollection<string>(_PulledCards);
 
-        private List<string> _HighCards = new List<string>();
+        private readonly List<string> _HighCards = new List<string>();
         public ReadOnlyCollection<string> HighCards => new ReadOnlyCollection<string>(_HighCards);
 
-        private List<string> _LowCards = new List<string>();
+        private readonly List<string> _LowCards = new List<string>();
         public ReadOnlyCollection<string> LowCards => new ReadOnlyCollection<string>(_LowCards);
 
-        public CountingDeck(int deckCount) : base(deckCount) { }
+        public new IDeck Empty
+        {
+            get
+            {
+                IDeck EmptyDeck = new CountingDeck(_DeckCount);
+                EmptyDeck.Clear();
 
-        public static new CountingDeck Empty = new CountingDeck(0);
+                return EmptyDeck;
+            }
+        }
+
+        public CountingDeck(int deckCount = 6) : base(deckCount) { }
 
         public override string Pull()
         {
@@ -36,9 +45,9 @@ namespace Blackjack_Rechner
         {
             base.New();
 
-            _PulledCards = new List<string>();
-            _HighCards = new List<string>();
-            _LowCards = new List<string>();
+            _PulledCards.Clear();
+            _HighCards.Clear();
+            _LowCards.Clear();
         }
 
         public void SetCards(List<string> cards, List<string> pulledCards, bool validate = true)
@@ -56,6 +65,6 @@ namespace Blackjack_Rechner
         }
 
         public int DeckValue => _LowCards.Count - _HighCards.Count;
-        public int CardsCount => _PulledCards.Count;
+        public int CardsPulled => _PulledCards.Count;
     }
 }

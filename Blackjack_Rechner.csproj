@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CountingDeck.cs" />
-    <Compile Include="Deck.cs" />
+    <Compile Include="DeckBase.cs" />
+    <Compile Include="StandardDeck.cs" />
+    <Compile Include="IDeck.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
